@@ -88,14 +88,20 @@ def upload_photo():
     return render_template('homepage.html', labels=labels, public_url=image_public_url, ingredients=ingredients)
 
 
+@app.route('/get_username', methods=['GET', 'POST'])
+def get_username():
+    username = request.form['inputName']
+    print(username)
+    return render_template('homepage.html', name=username)
+
 def create_user(username):
     datastore_client = datastore.Client()
     entity_kind = 'Person'
     key = datastore_client.key(entity_kind, username)
     entity = datastore.Entity(key)
     entity.update({
-        'name':username
-        'ingredients':[]
+        'name':username,
+        'ingredients':['apple']
         })
     return entity 
 
@@ -105,6 +111,10 @@ def server_error(e):
     An internal error occurred: <pre>{}</pre>
     See logs for full stacktrace.
     """.format(e), 500
+
+@app.route('/showSignUp')
+def showSignUp():
+    return render_template('signup.html')
 
 def check_fruit(labels, user):
     fruit_labels = []

@@ -38,6 +38,18 @@ li.nav a:hover {
  
 <html>
   <body>
+     <script>
+function toggleForms() {
+   var name = document.getElementById("inputName");
+   var signinForm = document.getElementById("signinForm");
+
+   if (name.text === "") {
+      signinForm.style.display = "block";
+   } else {
+      signinForm.style.display = "none";  
+   }  
+}
+     </script>
         <div class="container">
         <div class="header clearfix">
             <nav class="nav">
@@ -51,6 +63,15 @@ li.nav a:hover {
         </div>
       <div class="jumbotron">
         <h1>Smoothies</h1>
+        <Form action="get_username" method="POST" id="signinForm">
+         <label for="inputName" class="sr-only">Name</label>
+        <input type="name" name="inputName" id="inputName" class="form-control" placeholder="Name" required autofocus>
+      <input class="btn btn-sm btn-success" type="submit" name="submit" value="Submit"><br>
+        </Form>
+        {% if name %}
+        <h2>{{name}}</h2>
+    {% endif %}<br>
+
         <h2>Upload pictures of your ingredients</h2>
     <form action="upload_photo" method="POST" enctype="multipart/form-data">
       Upload File: <input type="file" name="file">

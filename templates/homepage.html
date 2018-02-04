@@ -7,21 +7,47 @@
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
  
     <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
-    <link href="/homepage.css" rel="stylesheet">
-    
+    <link href="homepage.css" rel="stylesheet">
+<style>
+ul.nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: white;
+}
+
+li.nav {
+    float: left;
+}
+
+li.nav a {
+    display: block;
+    color: #333;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li.nav a:hover {
+    background-color: #333;
+    color: white;
+}
+</style>
   </head>
  
 <html>
   <body>
         <div class="container">
-        <div class="header">
-            <nav>
+        <div class="header clearfix">
+            <nav class="nav">
                 <ul class="nav nav-pills pull-right">
-                    <li role="presentation"><a href="#">Sign In</a>
+                    <li class="nav" role="presentation" class="active"><a href="#">Home</a>
+                    </li>
+                    <li class="nav" role="presentation"><a href="#">Sign In</a>
                     </li>
                 </ul>
             </nav>
-            <h3 class="text-muted">Presented to you by the Foodies Team</h3>
         </div>
       <div class="jumbotron">
         <h1>Smoothies</h1>

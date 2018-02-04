@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Python Flask Bucket List App</title>
+    <title>Foodie Smoothies</title>
  
     
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -25,16 +25,17 @@
                     </li>
                 </ul>
             </nav>
-            <h3 class="text-muted">Python Flask App</h3>
+            <h3 class="text-muted">Presented to you by the Foodies Team</h3>
         </div>
       <div class="jumbotron">
         <h1>Smoothies</h1>
+        <h2>Upload pictures of your ingredients</h2>
     <form action="upload_photo" method="POST" enctype="multipart/form-data">
       Upload File: <input type="file" name="file">
-      <input class="btn btn-lg btn-primary btn-block" type="submit" name="submit" value="Submit">
+      <input class="btn btn-lg btn-primary btn-block" type="submit" name="submit" value="Submit"><br>
     </form>
     {% if public_url %}
-      <img src="{{public_url}}" height=200>
+    <img src="{{public_url}}" height=200><br>
       <h2>Label Detection:</h2>
     {% for label in labels %}
         <p><b>Label:</b> {{label.description}}</p>
@@ -49,7 +50,7 @@
           </div>
 
         <footer class="footer">
-            <p>&copy; Company 2015</p>
+            <p>&copy; The Foodies Team, 2018</p>
         </footer>
 </div>
   </body>

@@ -15,7 +15,7 @@ app = Flask(__name__)
 @app.route('/')
 def homepage():
     # Create a Cloud Datastore client.
-    datastore_client = datastore.Client()
+    datastore_client = datastore.Client("foodies-194120")
 
     # Use the Cloud Datastore client to fetch information from Datastore about
     # each photo.

@@ -63,32 +63,31 @@ function toggleForms() {
         </div>
       <div class="jumbotron">
         <h1>Smoothies</h1>
-        <Form action="get_username" method="POST" id="signinForm">
-         <label for="inputName" class="sr-only">Name</label>
-        <input type="name" name="inputName" id="inputName" class="form-control" placeholder="Name" required autofocus>
-      <input class="btn btn-sm btn-success" type="submit" name="submit" value="Submit"><br>
-        </Form>
-        {% if name %}
-        <h2>{{name}}</h2>
-    {% endif %}<br>
 
         <h2>Upload pictures of your ingredients</h2>
     <form action="upload_photo" method="POST" enctype="multipart/form-data">
       Upload File: <input type="file" name="file">
+         <label for="inputName" class="sr-only">Name</label>
+        <input type="name" name="inputName" id="inputName" class="form-control" placeholder="Name" required autofocus>
       <input class="btn btn-lg btn-success" type="submit" name="submit" value="Submit"><br>
     </form>
     {% if public_url %}
     <img src="{{public_url}}" height=200><br>
-      <h2>Label Detection:</h2>
-    {% for label in labels %}
-        <p><b>Label:</b> {{label.description}}</p>
-    {% endfor %}
-    {% endif %}<br>
-    <h2>List so Far:</h2>
+    {% if name %}
+        <h2>{{name}}'s List so Far:</h2>
+    {% endif %}
    <ul>
-    {% for i in ingredients %}
-      <li>{{i.key.name}}</li>
+    {% for x in ingredients %}
+    <li>{{x[0].key.name}} {{x[1]}}</li>
    {% endfor %}
+   </ul>
+   
+        <h2>Recipes you can make:</h2>
+   <ul>
+    {% for x in recipes %}
+    <li>{{x}}</li>
+   {% endfor %}
+    {% endif %}
    </ul>
           </div>
 

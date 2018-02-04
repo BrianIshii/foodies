@@ -79,31 +79,34 @@ def upload_photo():
     # Save the new entity to Datastore
     datastore_client.put(entity)
 
+    username = request.form['inputName']
     # TODO: Get user information through a form 
     user_entity = create_user(username)
 
-    labels = check_fruit(labels)
+    labels = check_fruit(labels, user_entity)
     # Redirect to the home page.
-    ingredients = print_ingredients()
-    return render_template('homepage.html', labels=labels, public_url=image_public_url, ingredients=ingredients)
-
-
-@app.route('/get_username', methods=['GET', 'POST'])
-def get_username():
-    username = request.form['inputName']
-    print(username)
-    return render_template('homepage.html', name=username)
+    ingredients = print_ingredients(user_entity)
+    recipes = check_recipes(ingredients)
+    return render_template('homepage.html', name=username, labels=labels, public_url=image_public_url, ingredients=ingredients, recipes=recipes)
 
 def create_user(username):
+    datastore_client = datastore.Client("foodies-194120")
+    query = datastore_client.query(kind='Person')
+    people = list(query.fetch())
+    for p in people:
+        print(p)
+        if (p.key.name == username):
+            return p
     datastore_client = datastore.Client()
     entity_kind = 'Person'
     key = datastore_client.key(entity_kind, username)
     entity = datastore.Entity(key)
     entity.update({
-        'name':username,
-        'ingredients':['apple']
+        'name': username,
+        'ingredients': []
         })
-    return entity 
+    datastore_client.put(entity)
+    return entity
 
 @app.errorhandler(500)
 def server_error(e):
@@ -115,6 +118,37 @@ def server_error(e):
 @app.route('/showSignUp')
 def showSignUp():
     return render_template('signup.html')
+
+def check_recipes(ingredients):
+    recipes = []
+    datastore_client = datastore.Client("foodies-194120")
+    query = datastore_client.query(kind='Recipe')
+    Recipe = list(query.fetch())
+    for r in Recipe:
+        good = True
+        for i in r['ingredients']:
+            has_fruit = False
+            for ing in ingredients:
+                if (ing[0].key.name == i):
+                    has_fruit = True
+            if (has_fruit is False):
+                good = False
+        if (good is True):
+            recipes.append(r.key.name)
+
+    return recipes
+
+
+def create_new_recipe():
+    datastore_client = datastore.Client()
+    entity_kind = 'Recipe'
+    key = datastore_client.key(entity_kind, "Apple Banana Smoothie")
+    entity = datastore.Entity(key)
+    entity.update({
+        'ingredients': ["apple", "banana"]
+        })
+    print(entity)
+    datastore_client.put(entity)
 
 def check_fruit(labels, user):
     fruit_labels = []
@@ -135,40 +169,69 @@ def check_fruit(labels, user):
     for label in labels:
         for fruit in fruits:
             if label.description == fruit:
-                update_ingredients(user, label.description)
-                print("new ingredient")
-                print(label.description)
-                fruit_labels.append(label)
+                if(check_ingredients(label, user) is False):
+                    print("new ingredient")
+                    print(label.description)
+                    create_ingredient(label.description, user)
+                    fruit_labels.append(label)
     return fruit_labels
 
-def update_ingredients(user, label):
-    user.update({
-        ingredients.append(label)})
+def update_ingredients(username):
+    datastore_client = datastore.Client("foodies-194120")
+    query = datastore_client.query(kind='Person')
+    people = list(query.fetch())
+    for p in people:
+        if (p['name'] == username):
+            print("update_ingred")
     datastore_client.put(user)
 
-"""
-def check_ingredients(label):
+def create_ingredient(name, user):
+    datastore_client = datastore.Client()
+    entity_kind = 'Ingredient'
+    key = datastore_client.key(entity_kind, name)
+    entity = datastore.Entity(key)
+    entity.update({
+        user.key.name: 1
+        })
+    datastore_client.put(entity)
+    return entity 
+
+def check_ingredients(label, user):
     datastore_client = datastore.Client("foodies-194120")
     query = datastore_client.query(kind='Ingredient')
     ingredients = list(query.fetch())
     for i in ingredients:
         if (i.key.name == label.description):
             print("same")
-            temp = datastore_client.get(i.key.name)
-            temp['count'] = temp['count'] + 1
-            datastore_client.put(temp)
+            print(i.key.name)
+            try:
+                print("found old count")
+                count = i[user.key.name] + 1
+                i.update({
+                    user.key.name: count
+                })
+            except:
+                i.update({
+                    user.key.name: 1
+                    })
+            datastore_client.put(i)
             return True
     return False
-"""
 
-def print_ingredients():
+
+def print_ingredients(user):
     ingred_list = []
     datastore_client = datastore.Client("foodies-194120")
-    query = datastore_client.query(kind='Person')
-    user = list(query.fetch())[0]
-    for i in user.key.ingredients:
+    query = datastore_client.query(kind='Ingredient')
+    ing = list(query.fetch())
+    for i in ing:
         print(i)
-        ingred_list.append(i)
+        try:
+            temp = i[user.key.name]
+            ingred_list.append((i, temp))
+        except:
+            temp = 1
+    print(ingred_list)
     return ingred_list
 
 
